@@ -1,0 +1,42 @@
+-*- encoding: utf-8-unix -*-
+
+Programming Language H. 
+
+Haskell like language with eager evaluations in IO().
+Using ghc SrcLoc.
+I'm not good at English sorry.
+
+日本語
+  haskell のIO()内をCみたいにeagerに評価して（IO関数の中身を組み換えます）
+  
+    io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
+    io1 arr ix arr2 ix2= io2( ioarr o [ix], ioarr o [ix] <- ioarr2 o [ix2]);
+    
+  みたい(未定)に書けるようにしたい。(他の言語も混ざているかもしれません)
+  (インストール中に書いてるので良い例が思いつかない。Haskellにも慣れていない。)
+  
+  上記の例は次のように組み換えます。
+    import GHC.IOArray
+  
+    io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
+    io1 arr ix arr2 ix2 = do
+      _uniquevar1_ <- readIOArray ioarr ix
+      _uniquevar2_ <- readIOArray ioarr2 ix2
+      writeIOArray ioarr ix _uniquevar2_
+      _uniquevar2_ <- io2 _uniquevar1_ _uniquevar2_
+      return _uniquevar2_
+
+   連想配列用の構文も作るかもしれません。
+   
+Install
+  1. Build GHC from source file. http://hackage.haskell.org/trac/ghc/wiki/Building
+
+  2. Build and install
+  make
+  make check
+  make install
+
+気になる事
+  ・eager-haskellが気になります。cleanのeager注釈いれた感じならいいんですが。
+  ・IOArray に IOArray入るのだろうか。
+  
