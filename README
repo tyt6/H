@@ -6,6 +6,7 @@ Develop stopped.
   中止
   haskell->sexp なparser作ろうと思ったが、indent-ruleだけではsexpにならないことが判明.
   parseModuleは使いこなせないと判断。
+  というか、次の事は(macroさえできれば)Liskellで簡単にできそうなので開発する必要もない。
 
   haskell のIO()内をCみたいにeagerに評価して（IO関数の中身を組み換えます）
   
