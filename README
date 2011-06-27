@@ -1,19 +1,18 @@
 -*- encoding: utf-8-unix -*-
 
-Programming Language H.
-
-LICENSES: GPL v3
-
-Haskell like language with eager evaluations in IO().
-I'm not good at English sorry.
+Develop is stopped.
 
 日本語
+  中止
+  haskell->sexp なparser作ろうと思ったが、indent-ruleだけではsexpにならないことが判明.
+  parseModuleは使いこなせないと判断。
+
   haskell のIO()内をCみたいにeagerに評価して（IO関数の中身を組み換えます）
   
     import GHC.IOArray
     
     io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
-    io1 arr ix arr2 ix2= io2( ioarr o [ix], ioarr o [ix] <- ioarr2 o [ix2]);
+    io1 arr ix arr2 ix2= io2( iofunc2, ioarr o [ix], ioarr o [ix] <- ioarr2 o [ix2]);
     
   みたい(未定)に書けるようにしたい。(他の言語も混ざているかもしれません)
   (インストール中に書いてるので良い例が思いつかない。Haskellにも慣れていない。)
@@ -29,21 +28,12 @@ I'm not good at English sorry.
       ! _uniquevar3_ <- io2 _uniquevar1_ _uniquevar2_
       return _uniquevar3_
 
-Install
-  1. Build GHC from source file. http://hackage.haskell.org/trac/ghc/wiki/Building
 
-  2. Build and install
-  make
-  make check
-  make install
+型推論を使わない場合
+    import GHC.IOArray
+    
+    io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
+    io1 arr ix arr2 ix2= iofunc1 (iocall iofunc2) (ioref iovar) (ioaref ioarr i)x (ioaset ioarr ix (ioaref ioarr2 ix2))
 
-気になる事
-  ・eager-haskellが気になります。cleanの正格性の注釈いれた感じならいいんですが。
-
-TODOというより将来
- まずは リリース
- 特殊構文用の型推論で明示的に型が無くても組み換えする。
- BLASやLAPACKに対応。
-
-実装上の話
- どうせLazyだしreverse無しが良さそう。
+    iofunc1 :: iofunc2Return -> iovarReturn -> ioarrReturn -> ioarr2Return ->iofunc1return
+      
