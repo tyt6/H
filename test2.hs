@@ -1,6 +1,7 @@
  module Main where
 --  制御文字いれてはいけない。
 import Data.Maybe
+import Data.List
 {-
  
 {-
@@ -50,7 +51,16 @@ test225 = -                         1.0e-2
 -- test224 = 0.
 -- x , y = x + y
 
+testio = return
+
+main2 = do
+  x <- [1,2,3]
+--  testio x
+  return x
+          
 main:: IO ()
 main = do
   -- x <- 1
+  putStr $ show $ main2
   putStr $ show $ test225* 100
+  testio ()

@@ -6,36 +6,37 @@ Develop stopped.
   中止
   haskell->sexp なparser作ろうと思ったが、indent-ruleだけではsexpにならないことが判明.
   parseModuleは使いこなせないと判断。
-  次の事は専用の型推論エンジン(GHC改造できればできるかも)が必要。
-  型推論を使わない場合のは(macroさえできれば)Liskellで簡単にできそうなので開発する必要もない。
+  liskellがあれば型推論を使わない場合は簡単に実装できそうである。
 
+  古い文章
   haskell のIO()内をCみたいにeagerに評価して（IO関数の中身を組み換えます）
   
     import GHC.IOArray
     
-    io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
-    io1 arr ix arr2 ix2= io2( iofunc2, ioarr o [ix], ioarr o [ix] <- ioarr2 o [ix2]);
-    
-  みたい(未定)に書けるようにしたい。(他の言語も混ざているかもしれません)
+    io1:: Ix i => (IOArray i e) -> i -> (IOArray i e) -> i -> IO Io2out
+    io1 ioarr ix ioarr2 ix2= io2 (ioarr[ix]) (ioarr[ix] <- ioarr2[ix2])
+  みたい(未定)に書けるようにしたい。
   (インストール中に書いてるので良い例が思いつかない。Haskellにも慣れていない。)
   
   上記の例は次のように組み換えます。(コンパイルに-XBangPatterns加えます。)
     import GHC.IOArray
-  
+
     io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
-    io1 arr ix arr2 ix2 = do
+    !io1 arr ix arr2 ix2 = do
       ! _uniquevar1_ <- readIOArray ioarr ix
       ! _uniquevar2_ <- readIOArray ioarr2 ix2
       writeIOArray ioarr ix _uniquevar2_
       ! _uniquevar3_ <- io2 _uniquevar1_ _uniquevar2_
       return _uniquevar3_
-
+      
+トップレベルの!はこの組み換えを有効にする合図
 
 型推論を使わない場合
     import GHC.IOArray
     
-    io1:: Ix i => IOArray i e -> i -> IOArray i e -> i -> IO Io2out
-    io1 arr ix arr2 ix2= iofunc1 (iocall iofunc2) (ioref iovar) (ioaref ioarr i)x (ioaset ioarr ix (ioaref ioarr2 ix2))
+    io1:: Ix i => IOVar e1 -> IOArray i e2 -> i -> IOArray i e2 -> i -> IO iofunc1out
+    io1 iovar ioarr ix ioarr2 ix2= iofunc1 (iocall iofunc2) (ioref iovar) (ioaref ioarr ix) (ioaset ioarr ix (ioaref ioarr2 ix2))
 
-    iofunc1 :: iofunc2Return -> iovarReturn -> ioarrReturn -> ioarr2Return ->iofunc1return
+    --こちらの定義は参考まで
+    iofunc1 :: iofunc2out -> e1 -> e2 -> e2 -> iofunc1out
       
